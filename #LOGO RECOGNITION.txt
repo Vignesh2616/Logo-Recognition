@@ -1,0 +1,120 @@
+#LOGO RECOGNITION
+
+
+
+import tensorflow as tf
+import os
+import cv2
+import imghdr
+import matplotlib.pyplot as plt
+
+gpus=tf.config.experimental.list_physical_devices('gpu')
+
+ data_dir=r"C:\Users\Admin\OneDrive\Desktop\data set"
+
+os.listdir(data_dir)
+
+img=cv2.imread(os.path.join("data","logoog2","images(1).jpeg"))
+
+img = cv2.imread(r"C:\Users\Admin\OneDrive\Desktop\data set\uu\images (1).png")
+plt.imshow(img)
+plt.show()
+
+img.shape
+
+plt.imshow(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
+plt.show()
+
+tf.data.Dataset
+
+import numpy as np
+
+data = tf.keras.utils.image_dataset_from_directory(r"C:\Users\Admin\OneDrive\Desktop\data set",
+    batch_size=32,
+    image_size=(128,128),
+    shuffle=True,
+    seed=42
+)
+
+data_iterator=data.as_numpy_iterator()
+
+batch=data_iterator.next()
+
+batch[0].shape
+
+batch[1]
+
+import numpy as np
+
+result_array = np.array([0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1])
+
+TATA = np.where(result_array == 0)[0]
+
+JSW = np.where(result_array == 1)[0]
+
+print("TATA:", negative_class_indices)
+print("JSW:", positive_class_indices)
+
+scaled=batch[0]/255
+
+scaled.max()
+
+len(data)
+train_size=int(len(data)*.7)+1
+val_size=int(len(data)*.2)
+test_size=int(len(data)*.1)
+
+from keras.models import Sequential
+from tensorflow.keras.layers import Conv2D,MaxPooling2D,Dense,Flatten,Dropout
+
+model=Sequential()
+
+model.add(Conv2D(16,(3,3),1,activation="relu",input_shape=(128,128,3)))
+model.add(MaxPooling2D())
+model.add(Conv2D(32,(3,3),1,activation="relu"))
+model.add(MaxPooling2D())
+model.add(Conv2D(16,(3,3),1,activation="relu"))
+model.add(MaxPooling2D())
+model.add(Flatten())
+model.add(Dense(256,activation="relu"))
+model.add(Dense(1,activation="sigmoid"))
+
+model.compile("adam",loss=tf.losses.BinaryCrossentropy(),metrics=["accuracy"])
+
+model.summary()
+
+logdir="logs"
+
+tensorboard_callback=tf.keras.callbacks.TensorBoard(log_dir=logdir)
+
+hist=model.fit(train,epochs=20,validation_data=val,callbacks=[tensorboard_callback])
+
+hist.history
+
+from tensorflow.keras.metrics import Precision,Recall,BinaryAccuracy
+
+pre=Precision()
+acc=BinaryAccuracy()  
+re=Recall()
+
+for batch in test.as_numpy_iterator():
+    x,y=batch
+    yhat=model.predict(x)
+    pre.update_state(y,yhat)
+    re.update_state(y,yhat) 
+    acc.update_state(y,yhat)
+
+print(f"precision:{pre.result().numpy()},recall:{re.result().numpy()},accuracy:{acc.result().numpy()}")
+
+img=cv2.imread(r"C:\Users\Admin\OneDrive\Desktop\data set\uuuu\download (9).png")
+plt.imshow(cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
+plt.show()
+
+resize=tf.image.resize(img,(128,128))
+plt.show()
+
+np.expand_dims(resize,0).shape
+
+yhat=model.predict(np.expand_dims(resize/255,0))
+
+yhat
